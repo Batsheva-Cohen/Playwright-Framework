@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TaskBoard</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 760px; margin: 24px auto; padding: 0 16px; }
+    h1 { font-size: 22px; }
+    .form-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    input, select, button { padding: 8px; font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; font-size: 14px; }
+    .empty { color: #888; padding: 16px 0; }
+    .status-done { text-decoration: line-through; color: #888; }
+  </style>
+</head>
+<body>~
+  <h1>TaskBoard</h1>
+
+  <div class="form-row">
+    <input id="title-input" data-testid="title-input" placeholder="כותרת המשימה" />
+    <select id="priority-select" data-testid="priority-select">
+      <option value="low">low</option>
+      <option value="medium" selected>medium</option>
+      <option value="high">high</option>
+    </select>
+    <button id="add-button" data-testid="add-button">הוספה</button>
+  </div>
+
+  <div class="form-row">
+    <label for="status-filter">סינון לפי status:</label>
+    <select id="status-filter" data-testid="status-filter">
+      <option value="">all</option>
+      <option value="todo">todo</option>
+      <option value="in_progress">in_progress</option>
+      <option value="done">done</option>
+    </select>
+  </div>
+
+  <table data-testid="tasks-table">
+    <thead>
+      <tr><th>ID</th><th>כותרת</th><th>priority</th><th>status</th><th>פעולות</th></tr>
+    </thead>
+    <tbody id="tasks-body" data-testid="tasks-body"></tbody>
+  </table>
+  <div id="empty-state" data-testid="empty-state" class="empty" hidden>אין משימות להצגה</div>
+
+  <script>
+    const api = "/api/tasks";
+
+    async function loadTasks() {
+      const filter = document.getElementById("status-filter").value;
+      const url = filter ? `${api}?status=${filter}` : api;
+      const res = await fetch(url);
+      const tasks = await res.json();
+      const body = document.getElementById("tasks-body");
+      const empty = document.getElementById("empty-state");
+      body.innerHTML = "";
+      empty.hidden = tasks.length !== 0;
+      for (const task of tasks) {
+        const tr = document.createElement("tr");
+        tr.setAttribute("data-testid", `task-row-${task.id}`);
+        tr.innerHTML = `
+          <td>${task.id}</td>
+          <td class="${task.status === "done" ? "status-done" : ""}" data-testid="task-title-${task.id}">${task.title}</td>
+          <td data-testid="task-priority-${task.id}">${task.priority}</td>
+          <td data-testid="task-status-${task.id}">${task.status}</td>
+          <td>
+            <button data-testid="done-button-${task.id}" onclick="markDone(${task.id})">סיום</button>
+            <button data-testid="delete-button-${task.id}" onclick="deleteTask(${task.id})">מחיקה</button>
+          </td>`;
+        body.appendChild(tr);
+      }
+    }
+
+    async function addTask() {
+      const titleEl = document.getElementById("title-input");
+      const priority = document.getElementById("priority-select").value;
+      const title = titleEl.value.trim();
+      if (!title) { return; }
+      await fetch(api, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, priority }),
+      });
+      titleEl.value = "";
+      await loadTasks();
+    }
+
+    async function markDone(id) {
+      await fetch(`${api}/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "done" }),
+      });
+      await loadTasks();
+    }
+
+    async function deleteTask(id) {
+      await fetch(`${api}/${id}`, { method: "DELETE" });
+      await loadTasks();
+    }
+
+    document.getElementById("add-button").addEventListener("click", addTask);
+    document.getElementById("status-filter").addEventListener("change", loadTasks);
+    loadTasks();
+  </script>
+</body>
+</html>
