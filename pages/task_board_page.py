@@ -46,6 +46,13 @@ class TaskBoardPage(BasePage):
     def filter_by_status(self, status: str) -> None:
         # ערך ריק מציג את כל המשימות
         self.status_filter.select_option(status)
-        
-async def get_tasks_count(self) -> int:
-    return await self.tasks_body.locator("tr").count()
+
+    async def get_tasks_count(self) -> int:
+        return await self.tasks_body.locator("tr").count()
+    
+    def get_header_cell(self, header_name: str):
+        return self.tasks_table.get_by_role("columnheader", name=header_name)
+    
+    
+
+    
