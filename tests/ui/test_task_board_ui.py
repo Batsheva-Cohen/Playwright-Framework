@@ -37,7 +37,26 @@ def test_homepage_with_pom(page: Page) -> None:
     #בדיקה שאופציית בחירה "כל" נמצאת ברשימה
     expect(board.status_filter).to_contain_text("all")
 
-
+"""
+הפרמטר 
+board 
+בבדיקה הוא התוצאה של הרצת הפיקסטור 
+board 
+מ-conftest.py.
+ התפקיד של הפיקסטור הוא להכין את האובייקט ולפתוח את הדף
+ , כדי שהבדיקה שלי תקבל אותו מוכן ותריץ את הטסטים
+"""
+def test_homepage_with_use_fixture (board:TaskBoardPage):
+    
+    expect(board.title_input).to_be_visible()
+    expect(board.add_button).to_be_visible()
+    expect(board.tasks_table).to_be_visible()
+    #בדיקה שיש ערך ברירת באפשרויות בחירה מדיום
+    expect(board.priority_select).to_have_value("medium")
+    #בדיקה שהטבלה מופיע בדף
+    expect(board.tasks_table).to_be_visible()
+    #בדיקה שאופציית בחירה "כל" נמצאת ברשימה
+    expect(board.status_filter).to_contain_text("all")
 
 
 
