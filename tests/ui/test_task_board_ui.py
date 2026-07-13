@@ -98,6 +98,12 @@ def test_filter_by_status_done_shows_only_completed_tasks(board: TaskBoardPage) 
     expect(board.row_by_title(title2)).to_be_hidden()
 
 
+#בדיקה שלילית לווידוא שהמערכת מונעת יצירת משימות לא תקינות ללא שם.
+def test_add_task_with_empty_title_does_not_create_row(board: TaskBoardPage) -> None:
+        title = unique_title()
+        board.add_task(title, priority="high")
+        expect(board.row_by_title(title)).to_be_hidden()
+
 
 
 
