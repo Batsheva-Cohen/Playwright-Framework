@@ -81,3 +81,4 @@ def board(page: Page) -> TaskBoardPage:
     board = TaskBoardPage(page)
     board.open()
     return board
+
