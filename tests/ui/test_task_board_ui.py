@@ -3,11 +3,6 @@ from playwright.sync_api import Page, expect
 from pages.task_board_page import TaskBoardPage
 from utils.data_factory import unique_title
 
-# web-first assertion,
-    # מונע בדיקות שבירות כי הוא חוסך לי את הניהול של כל מה שקרה כשהדף נטען וכל הכפתורים נטענים ועולים 
-    # וכל הבדיקות על הכפתורים שלי לא מתחילות עד שכל המסך עולה מה שחוסך לי את כל הנפילות האלה כששוכחים לשים 
-    # sleep 
-    # או שזמן ההמתנה לא היה מספיק כדי שהוא יעלה לרקע והבדיקה התחילה על כפתור שלא נמצא 
 
 def test_homepage_loads(page: Page) -> None:
     page.goto("/")
