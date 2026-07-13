@@ -75,4 +75,14 @@ def test_test_mark_task_as_done(board: TaskBoardPage) -> None:
     board.mark_done(title)
     expect(board.status_cell(title)).to_have_text("done")
     expect(board.title_cell(title)).to_have_class("status-done")
+
+def test_delete_task_shows_empty_state(board: TaskBoardPage) -> None:
+    title = unique_title("dell")
+    board.add_task(title, priority="high")
+    board.delete(title)
+    expect(board.row_by_title(title)).to_be_hidden()
+    expect(board.empty_state).to_be_visible()
+
+
+
     
