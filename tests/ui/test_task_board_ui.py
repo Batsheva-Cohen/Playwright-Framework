@@ -1,6 +1,7 @@
 from playwright.sync_api import Page, expect
 
 from pages.task_board_page import TaskBoardPage
+from utils.data_factory import unique_title
 
 # web-first assertion,
     # מונע בדיקות שבירות כי הוא חוסך לי את הניהול של כל מה שקרה כשהדף נטען וכל הכפתורים נטענים ועולים 
@@ -59,6 +60,19 @@ def test_homepage_with_use_fixture (board:TaskBoardPage):
     expect(board.status_filter).to_contain_text("all")
 
 
+def test_add_task_appears_in_list(board: TaskBoardPage) -> None:
+    title = unique_title("add")
+    board.add_task(title, priority="high")
 
+    expect(board.row_by_title(title)).to_be_visible()
+    expect(board.priority_cell(title)).to_have_text("high")
+    expect(board.status_cell(title)).to_have_text("todo")
+
+
+def test_test_mark_task_as_done(board: TaskBoardPage) -> None:
+    title = unique_title("complete")
+    board.add_task(title, priority="high")
+    board.mark_done(title)
+    expect(board.status_cell(title)).to_have_text("done")
 
     
