@@ -74,5 +74,5 @@ def test_test_mark_task_as_done(board: TaskBoardPage) -> None:
     board.add_task(title, priority="high")
     board.mark_done(title)
     expect(board.status_cell(title)).to_have_text("done")
-
+    expect(board.title_cell(title)).to_have_class("status-done")
     

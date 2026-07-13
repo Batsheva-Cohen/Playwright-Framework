@@ -29,6 +29,8 @@ class TaskBoardPage(BasePage):
         return self.tasks_body.locator("tr").filter(
             has=self.page.get_by_text(title, exact=True)
         )
+    def title_cell(self, title: str) -> Locator:
+        return self.row_by_title(title).locator("td").nth(1)
 
     def priority_cell(self, title: str) -> Locator:
         # סדר התאים: id, כותרת, priority, status, פעולות
