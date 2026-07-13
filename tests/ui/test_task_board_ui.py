@@ -59,7 +59,6 @@ def test_homepage_with_use_fixture (board:TaskBoardPage):
     #בדיקה שאופציית בחירה "כל" נמצאת ברשימה
     expect(board.status_filter).to_contain_text("all")
 
-
 def test_add_task_appears_in_list(board: TaskBoardPage) -> None:
     title = unique_title("add")
     board.add_task(title, priority="high")
@@ -68,7 +67,8 @@ def test_add_task_appears_in_list(board: TaskBoardPage) -> None:
     expect(board.priority_cell(title)).to_have_text("high")
     expect(board.status_cell(title)).to_have_text("todo")
 
-
+#וידוא שסימון משימה כבוצעה מעדכן את הסטטוס שלה במערכת.
+#וידוא שמשימה שסומנה כבוצעה מקבלת את העיצוב הוויזואלי המתאים (קו חוצה).
 def test_test_mark_task_as_done(board: TaskBoardPage) -> None:
     title = unique_title("complete")
     board.add_task(title, priority="high")
@@ -76,12 +76,29 @@ def test_test_mark_task_as_done(board: TaskBoardPage) -> None:
     expect(board.status_cell(title)).to_have_text("done")
     expect(board.title_cell(title)).to_have_class("status-done")
 
+#בדיקה לוידוי שמשימה שנמחקה אכן לא נמצאת 
 def test_delete_task_shows_empty_state(board: TaskBoardPage) -> None:
     title = unique_title("dell")
     board.add_task(title, priority="high")
     board.delete(title)
     expect(board.row_by_title(title)).to_be_hidden()
     expect(board.empty_state).to_be_visible()
+
+#וידוא שמסנן הסטטוסים מציג אך ורק משימות שעונות על תנאי הסינון.
+def test_filter_by_status_done_shows_only_completed_tasks(board: TaskBoardPage) -> None:
+    title1 = unique_title("complete and done")
+    title2 = unique_title("complete")
+
+    board.add_task(title1, priority="high")
+    board.add_task(title2, priority="low")
+
+    board.mark_done(title1)
+    board.filter_by_status("done")
+    expect(board.row_by_title(title1)).to_be_visible()
+    expect(board.row_by_title(title2)).to_be_hidden()
+
+
+
 
 
 
