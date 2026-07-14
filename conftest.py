@@ -82,3 +82,17 @@ def board(page: Page) -> TaskBoardPage:
     board.open()
     return board
 
+@pytest.fixture(scope="session")
+def auth_token(api_request_context: APIRequestContext) -> str:
+    response = api_request_context.post(
+        "/auth/login",
+        data={"username": settings.username, "password": settings.password},
+    )
+    assert response.status == 200
+    return response.json()["access_token"]
+
+
+@pytest.fixture
+def auth_headers(auth_token: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {auth_token}"}
+
