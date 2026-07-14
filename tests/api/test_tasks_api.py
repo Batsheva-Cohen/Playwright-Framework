@@ -1,3 +1,5 @@
+import json
+
 from playwright.sync_api import APIRequestContext
 
 from utils.data_factory import task_payload
@@ -43,5 +45,14 @@ def test_incorrect_priority_return_422(api_request_context: APIRequestContext) -
         created = api_request_context.post("/api/tasks", data=payload)
         assert created.status == 422
 
-
+#Checking the JSON content after receiving a response
+def test_JSON_structure(api_request_context) -> None:
+    payload = task_payload(title="new task", priority="low")
+    created = api_request_context.post("/api/tasks", data=payload)
+    assert created.status == 201
+    body = created.json()
+    list_of_fields = ["id", "title", "priority", "status", "created_at"]
+    for i in list_of_fields:
+         assert i in body.keys()
+  
 #uv run pytest
