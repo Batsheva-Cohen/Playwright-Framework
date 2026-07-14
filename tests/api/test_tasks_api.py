@@ -54,5 +54,13 @@ def test_JSON_structure(api_request_context) -> None:
     list_of_fields = ["id", "title", "priority", "status", "created_at"]
     for i in list_of_fields:
          assert i in body.keys()
+#בדיקת בקשה למשימה שלא קיימת ןמחזירה סטטוס קוד 404
+def test_for_non_existent_task_returns_404(api_request_context) -> None:
+    payload = task_payload(title="new task", priority="low")
+    created = api_request_context.post("/api/tasks",data=payload)
+    body = created.json()
+    task_id = body["id"]
+    get = api_request_context.get(f"/api/tasks/{task_id*3}")    
+    assert get.status == 404
   
 #uv run pytest
