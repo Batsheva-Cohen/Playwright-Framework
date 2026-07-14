@@ -22,4 +22,10 @@ dev = [
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "--tracing=retain-on-failure"
+addopts = "--strict-markers --tracing=retain-on-failure"
+markers = [
+    "ui: בדיקות end to end דרך הדפדפן",
+    "api: בדיקות ברמת ה-API",
+    "auth: בדיקות אימות ואבטחה",
+    "smoke: בדיקות קריטיות מינימליות",
+]

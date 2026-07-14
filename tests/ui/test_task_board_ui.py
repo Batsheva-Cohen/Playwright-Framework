@@ -1,9 +1,11 @@
+import pytest
 from playwright.sync_api import Page, expect
 
 from pages.task_board_page import TaskBoardPage
 from utils.data_factory import unique_title
 
 
+@pytest.mark.ui
 def test_homepage_loads(page: Page) -> None:
     page.goto("/")
 
@@ -18,7 +20,7 @@ def test_homepage_loads(page: Page) -> None:
      #בדיקה שהרשימה מכילה אופציית בחירה של ALL
     expect(page.get_by_test_id("status-filter")).to_contain_text("all")
     
-
+@pytest.mark.ui
 def test_homepage_with_pom(page: Page) -> None:
     board = TaskBoardPage(page)
     board.open()
@@ -42,6 +44,7 @@ board
  התפקיד של הפיקסטור הוא להכין את האובייקט ולפתוח את הדף
  , כדי שהבדיקה שלי תקבל אותו מוכן ותריץ את הטסטים
 """
+@pytest.mark.ui
 def test_homepage_with_use_fixture (board:TaskBoardPage):
     
     expect(board.title_input).to_be_visible()
@@ -54,6 +57,7 @@ def test_homepage_with_use_fixture (board:TaskBoardPage):
     #בדיקה שאופציית בחירה "כל" נמצאת ברשימה
     expect(board.status_filter).to_contain_text("all")
 
+@pytest.mark.ui
 def test_add_task_appears_in_list(board: TaskBoardPage) -> None:
     title = unique_title("add")
     board.add_task(title, priority="high")
@@ -64,6 +68,7 @@ def test_add_task_appears_in_list(board: TaskBoardPage) -> None:
 
 #וידוא שסימון משימה כבוצעה מעדכן את הסטטוס שלה במערכת.
 #וידוא שמשימה שסומנה כבוצעה מקבלת את העיצוב הוויזואלי המתאים (קו חוצה).
+@pytest.mark.ui
 def test_test_mark_task_as_done(board: TaskBoardPage) -> None:
     title = unique_title("complete")
     board.add_task(title, priority="high")
@@ -72,6 +77,7 @@ def test_test_mark_task_as_done(board: TaskBoardPage) -> None:
     expect(board.title_cell(title)).to_have_class("status-done")
 
 #בדיקה לוידוי שמשימה שנמחקה אכן לא נמצאת 
+@pytest.mark.ui
 def test_delete_task_shows_empty_state(board: TaskBoardPage) -> None:
     title = unique_title("dell")
     board.add_task(title, priority="high")
@@ -80,6 +86,7 @@ def test_delete_task_shows_empty_state(board: TaskBoardPage) -> None:
     expect(board.empty_state).to_be_visible()
 
 #וידוא שמסנן הסטטוסים מציג אך ורק משימות שעונות על תנאי הסינון.
+@pytest.mark.ui
 def test_filter_by_status_done_shows_only_completed_tasks(board: TaskBoardPage) -> None:
     title1 = unique_title("complete and done")
     title2 = unique_title("complete")
@@ -94,6 +101,7 @@ def test_filter_by_status_done_shows_only_completed_tasks(board: TaskBoardPage) 
 
 
 #בדיקה שלילית לווידוא שהמערכת מונעת יצירת משימות לא תקינות ללא שם.
+@pytest.mark.ui
 def test_add_task_with_empty_title_does_not_create_row(board: TaskBoardPage) -> None:
         title = unique_title()
         board.add_task(title, priority="high")
