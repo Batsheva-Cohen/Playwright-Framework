@@ -62,3 +62,17 @@ def test_secure_notes_API(api_request_context: APIRequestContext):
 
     assert encrypted_message != create_my_note["content"]  
     assert decrypted_message == create_my_note["content"] 
+
+# בדיקה שליחת בקשת הצפנה ללא טוקן מחזירה 401
+def test_create_note_unauthorized(api_request_context: APIRequestContext):
+    payload = NoteCreate(content="the secret password is 1234")
+    my_token = ""
+    create_my_note = create_note(payload, settings.username)
+    response = api_request_context.post(
+        "/api/secure-notes",
+        headers={
+            "Authorization": f"Bearer {my_token}",
+        },
+        data={"content": create_my_note["content"]}
+        )
+    assert response.status == 401
