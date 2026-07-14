@@ -1,5 +1,7 @@
 from playwright.sync_api import APIRequestContext
 
+from app.main import NoteCreate, create_note
+from app.security import create_access_token, decode_access_token, decrypt, encrypt
 from utils.config import settings
 
 
@@ -40,4 +42,23 @@ def test_invalid_token(api_request_context: APIRequestContext) -> None:
     response = api_request_context.get("/api/me", headers=auth_headers)
     assert response.status == 401
 
-# uv run pytest
+# יצירת טקסט להצפנה ובדיקה שהוא אכן מצליח להצפין ולפענח בחזרה
+def test_secure_notes_API(api_request_context: APIRequestContext):
+    my_token = create_access_token(settings.username)
+    payload = NoteCreate(content="the secret password is 1234")
+    create_my_note = create_note(payload, settings.username)
+    response = api_request_context.post(
+        "/api/secure-notes",
+        headers={
+            "Authorization": f"Bearer {my_token}",
+        },
+        data={"content": create_my_note["content"]}
+
+    )
+    assert response.status == 201
+
+    encrypted_message = encrypt(create_my_note["content"])
+    decrypted_message = decrypt(encrypted_message)
+
+    assert encrypted_message != create_my_note["content"]  
+    assert decrypted_message == create_my_note["content"] 
