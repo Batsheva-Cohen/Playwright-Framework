@@ -62,5 +62,22 @@ def test_for_non_existent_task_returns_404(api_request_context) -> None:
     task_id = body["id"]
     get = api_request_context.get(f"/api/tasks/{task_id*3}")    
     assert get.status == 404
-  
-#uv run pytest
+
+def test_filter_tasks_by_status_done(api_request_context) -> None:
+    payload_done1 = task_payload(title="title_done1", status="done")
+    api_request_context.post("/api/tasks", data=payload_done1)
+
+    payload_done2 = task_payload(title="title_done2", status="done")
+    api_request_context.post("/api/tasks", data=payload_done2)
+
+    payload_todo = task_payload(title="title_todo", status="todo")
+    api_request_context.post("/api/tasks", data=payload_todo)
+    
+    response = api_request_context.get("/api/tasks", params={"status": "done"})
+    assert response.status == 200
+    
+    tasks = response.json()
+    assert len(tasks) > 0, "Expected to find at least one done task"
+    for task in tasks:
+        assert task["status"] == "done", f"Expected task status to be 'done', but got {task['status']}"
+        
