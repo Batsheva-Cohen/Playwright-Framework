@@ -26,11 +26,18 @@ def test_me_requires_valid_token(
     assert response.json()["username"] == settings.username
 
 #בדיקה שהתחברות עם פרטים שגויים מוחזרת עם קוד 401.
-def test_incorrect_login(api_request_context: APIRequestContext) -> None:
+def test_invalid_credentials(api_request_context: APIRequestContext) -> None:
     response = api_request_context.post(
         "/auth/login",
         data={"username": "valid_username", "password": "valid_password"},        
     )
+    assert response.status == 401
+
+# test with valid token return status code 401
+def test_invalid_token(api_request_context: APIRequestContext) -> None:
+    auth_token = "garbage"
+    auth_headers = {"Authorization": f"Bearer {auth_token}"}
+    response = api_request_context.get("/api/me", headers=auth_headers)
     assert response.status == 401
 
 # uv run pytest
