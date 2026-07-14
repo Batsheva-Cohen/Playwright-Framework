@@ -47,3 +47,9 @@ init.
 כדי להריץ את קבוצת בדיקות ה-Smoke בלבד, יש להריץ את הפקודה הבאה בטרמינל:
 *the command:*
 uv run pytest -m smoke
+
+**Playwright Trace Viewer**
+שבאה לבדוק שאכן המשימות מסומנות כבוצעוtest_test_mark_task_as_done בחרתי בבדיקה 
+done בעוד שהם to do שיניתי אותם כמצפות לקבל מצב 
+והופיע לי הטבלה הנוכחית עם סטטוס של בוצע Playwright Trace Viewerזה נכשל פתחתי את ה
+done בעוד שזה todo ככה שאני מבינה שזה נכשל כי ציפיתי לקבל 
