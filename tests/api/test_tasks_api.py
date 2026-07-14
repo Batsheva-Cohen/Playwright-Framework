@@ -37,5 +37,11 @@ def test_create_task_with_empty_title_returns_422(api_request_context: APIReques
     created = api_request_context.post("/api/tasks", data=payload)
     assert created.status == 422
 
+#Incorrect priority test
+def test_incorrect_priority_return_422(api_request_context: APIRequestContext) -> None:
+        payload = task_payload(title="Incorrect priority", priority="urgen")
+        created = api_request_context.post("/api/tasks", data=payload)
+        assert created.status == 422
+
 
 #uv run pytest
