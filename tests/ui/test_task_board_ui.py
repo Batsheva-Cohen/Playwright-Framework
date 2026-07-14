@@ -88,6 +88,7 @@ def test_delete_task_shows_empty_state(board: TaskBoardPage) -> None:
 
 #וידוא שמסנן הסטטוסים מציג אך ורק משימות שעונות על תנאי הסינון.
 @pytest.mark.ui
+
 def test_filter_by_status_done_shows_only_completed_tasks(board: TaskBoardPage) -> None:
     title1 = unique_title("complete and done")
     title2 = unique_title("complete")
@@ -102,11 +103,16 @@ def test_filter_by_status_done_shows_only_completed_tasks(board: TaskBoardPage) 
 
 
 #בדיקה שלילית לווידוא שהמערכת מונעת יצירת משימות לא תקינות ללא שם.
+@pytest.mark.parametrize("invalid_title", [
+    "",                
+    "   ",           
+    " ",    
+])
 @pytest.mark.ui
-def test_add_task_with_empty_title_does_not_create_row(board: TaskBoardPage) -> None:
-        title = unique_title()
-        board.add_task(title, priority="high")
-        expect(board.row_by_title(title)).to_be_hidden()
+def test_add_task_with_empty_title_does_not_create_row(board: TaskBoardPage,invalid_title) -> None:
+        #title = unique_title()
+        board.add_task(invalid_title, priority="high")
+        expect(board.row_by_title(invalid_title)).to_be_hidden()
 
 
 
