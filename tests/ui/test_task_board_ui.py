@@ -6,6 +6,7 @@ from utils.data_factory import unique_title
 
 
 @pytest.mark.ui
+@pytest.mark.smoke
 def test_homepage_loads(page: Page) -> None:
     page.goto("/")
 

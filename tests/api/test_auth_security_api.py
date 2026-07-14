@@ -8,6 +8,7 @@ from utils.config import settings
 
 @pytest.mark.api
 @pytest.mark.auth
+@pytest.mark.smoke
 def test_login_returns_token(api_request_context: APIRequestContext) -> None:
     response = api_request_context.post(
         "/auth/login",
