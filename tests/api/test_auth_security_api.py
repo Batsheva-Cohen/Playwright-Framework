@@ -1,7 +1,7 @@
 from playwright.sync_api import APIRequestContext
 
 from app.main import NoteCreate, create_note
-from app.security import create_access_token, decode_access_token, decrypt, encrypt
+from app.security import create_access_token, decrypt, encrypt
 from utils.config import settings
 
 
