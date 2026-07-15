@@ -85,7 +85,7 @@ def test_filter_tasks_by_status_done(api_request_context) -> None:
     tasks = response.json()
     assert len(tasks) > 0, "Expected to find at least one done task"
     for task in tasks:
-        assert task["status"] == "done", f"Expected task status to be 'done', but got {task['status']}"
+        assert task["status"] == "done", f"Expected task status to be 'done', but got {task['status']}"  # noqa: E501
 
 
 
