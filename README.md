@@ -1,5 +1,53 @@
+# Playwright Test Automation Framework
+מערכת תשתית אוטומציה מקצה לקצה (End-to-End Test Automation Framework) המבוססת על **Playwright** ו-**pytest** בשפת Python. ה-Framework תוכנן ונבנה מאפס במטרה להדגים ארכיטקטורה מודרנית, רובסטית ויציבה לבדיקות ממשק משתמש (UI) ובדיקות ממשק תכנות יישומים (API) עבור מערכת ניהול משימות
 
+## על מה הפרויקט?
+פרויקט זה מייצג את ההבדל בין כתיבת "כמה בדיקות ספורדיות" לבין בניית **תשתית אוטומציה (Framework) תעשייתית**. 
+המערכת הנבדקת (**SUT**) היא אפליקציית ניהול משימות (TaskBoard) מבוססת **FastAPI** הכוללת:
+* **REST API מלא** עם תיעוד Swagger אינטראקטיבי.
+* **ממשק Web (UI)** עם מזהים יציבים מסוג `data-testid`.
+* **מנגנון אימות אבטחה (Authentication)** מבוסס JWT.
+* **שמירת נתונים מוצפנת** בבסיס נתונים SQLite מקומי.
 
+### תכונות מפתח של ה-Framework:
+1. **Page Object Model (POM):** הפרדה מוחלטת בין לוגיקת הבדיקות לבין ה-Locators והאלמנטים בדף, ליצירת קוד קריא וקל לתחזוקה.
+2. **Web-First Assertions:** שימוש במנגנון ה-Auto-waiting המובנה של Playwright למניעת בדיקות שבירות (Flaky Tests).
+3. **ניהול סביבה מודרני:** שימוש ב-**uv** לניהול חבילות וסביבות וירטואליות מהירות במיוחד, ו-**ruff** לשמירה על איכות וניקיון הקוד (Linting & Formatting).
+4. **בידוד בדיקות הרמטי:** ניקוי אוטומטי של בסיס הנתונים ושימוש ב-DB ייעודי לבדיקות לפני כל ריצה באמצעות Pytest Fixtures.
+5. **הרצה משולבת (E2E):** הדמיית תרחישים המשלבים בדיקות API לצד בדיקות UI באותו מחזור הרצה.
+
+# מבנה תקיות
+playwright-framework/
+  app/                          # ה-SUT, המערכת הנבדקת (נתון)
+    __init__.py
+    db.py
+    main.py
+    security.py
+    static/
+      index.html
+  pages/                        # Page Object Model
+    __init__.py
+    base_page.py
+    task_board_page.py
+  utils/                        # כלי עזר ותצורה
+    __init__.py
+    config.py
+    data_factory.py
+  tests/
+    ui/
+      test_task_board_ui.py
+    api/
+      test_tasks_api.py
+      test_auth_security_api.py
+  conftest.py                   # fixtures משותפים והפעלת ה-SUT
+  pyproject.toml
+  README.md
+  .gitignore
+
+### 1. איך מריצים
+בזכות ה-Fixtures החכמים שיושבים ב-`conftest.py`, המערכת תדע להרים את שרת ה-FastAPI (ה-SUT) באופן אוטומטי ברקע, על גבי פורט מבודד ובסיס נתונים נפרד לבדיקות (`test_tasks.db`). 
+הפקודה-
+uv run pytest
 
 # הסבר מושגים
 **web-first assertion היתרון שנותן לי**
