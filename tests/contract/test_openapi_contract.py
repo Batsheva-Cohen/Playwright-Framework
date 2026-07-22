@@ -35,18 +35,22 @@ def test_protected_endpoints_declare_security(api_request_context: APIRequestCon
 
 #בדיקה שמוודאת שהתשובות בפועל תואמות לחוזה
 def test_get_tasks_response_contains_all_required_fields(api_request_context: APIRequestContext) -> None:
-        spec = api_request_context.get("/openapi.json").json()
-        required_fields = set(spec["components"]["schemas"]["Task"]["required"])
+    spec = api_request_context.get("/openapi.json").json()
+    required_fields = set(spec["components"]["schemas"]["Task"]["required"])
 
-        response = api_request_context.get("/api/tasks")
-        assert response.status_code == 200
-        tasks = response.json()
+    response = api_request_context.get("/api/tasks")
+    assert response.status == 200
+    tasks = response.json()
 
-        for task in tasks:
-            missing = required_fields - set(task.keys())
-            assert not missing, f"Task {task.get('id')} is missing required fields: {missing}"
+    for task in tasks:
+        missing = required_fields - set(task.keys())
+        assert not missing, f"Task {task.get('id')} is missing required fields: {missing}"
 
-
+#בדיקה שהחוזה מכיל תיעוד עבור  שגיאה 422 
+def test_openapi_declares_422_validation_error_for_create_task(api_request_context: APIRequestContext) -> None:
+    spec = api_request_context.get("/openapi.json").json()
+    post_responses = spec["paths"]["/api/tasks"]["post"]["responses"]
+    assert "422" in post_responses, "חסר תיעוד עבור סטטוס קוד 422 ביצירת משימה"
 
 
 
