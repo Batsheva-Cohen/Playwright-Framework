@@ -53,4 +53,7 @@ def test_openapi_declares_422_validation_error_for_create_task(api_request_conte
     assert "422" in post_responses, "חסר תיעוד עבור סטטוס קוד 422 ביצירת משימה"
 
 
-
+def test_the_list_off_the_task_is_array(api_request_context: APIRequestContext) -> None:
+    spec = api_request_context.get("/openapi.json").json()
+    schema_responses = spec["paths"]["/api/tasks"]["post"]["responses"]["200"]["schema"]
+    assert  schema_responses.get("type") == "array", f"הסוג הוא לא מערך אלא - {schema_responses.get("type")}"  # noqa: E501
