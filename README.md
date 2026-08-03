@@ -262,4 +262,27 @@ api זה בדיקה שמשמה תהליך שלם סביב מה שקורה באת
  עם חוזה מסודר הכל מתועד שמה איך משתמשים ומה ההגבלות
  
 
+**Docker Image בניית ה**
+docker build -t taskboard .
+docker run --rm -p 8000:8000 -e INSTANCE_ID=solo taskboard
+פלט-
+172.17.0.1:59448 - "GET /api/whoami HTTP/1.1" 200 OK
+ רץ בטרמינל הרצתי את הפקודה conteiner בזמן שה 
+curl.exe -s http://localhost:8000/api/whoami
+פלט-
+{"instance":"solo"}
+
+docker run --rm -p 8000:8000 -e INSTANCE_ID=server taskboard
+פלט-
+INFO:     172.17.0.1:49568 - "GET /api/whoami HTTP/1.1" 200 OK
+curl.exe -s http://localhost:8000/api/whoami
+פלט-
+{"instance":"server"}
+
+curl.exe -s http://localhost:8000/api/health
+אומר לי את מצב השרת
+{"status":"ok"}
+
+
+
 
