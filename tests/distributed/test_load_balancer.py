@@ -79,4 +79,17 @@ def test_multiple_tasks_consistent_across_instances(lb_context: APIRequestContex
 
 
 
+def test_encrypted_note_consistent_across_instances(lb_context: APIRequestContext,) -> None:
+    secret_content = "this is encrypted note ! ! ! !"
+    created = lb_context.post(
+        "/api/notes",
+        data={"content": secret_content, "encrypted": True},
+    )
+    assert created.status == 201
+    note_id = created.json()["id"]
 
+    get_request = lb_context.get(f"/api/notes/{note_id}")
+    assert get_request.status == 200
+
+    fetched_note = get_request.json()
+    assert fetched_note["content"] == secret_content
