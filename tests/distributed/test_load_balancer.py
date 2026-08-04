@@ -59,3 +59,24 @@ def test_token_valid_across_instances(lb_context: APIRequestContext) -> None:
     # ה-token הונפק על ידי אינסטנס כלשהו, ונבדק אולי על ידי אחר, אך הסוד משותף
     me = lb_context.get("/api/me", headers={"Authorization": f"Bearer {token}"})
     assert me.status == 200
+
+def test_multiple_tasks_consistent_across_instances(lb_context: APIRequestContext,) -> None:
+    list_ids_tasks = []
+    for i in range(5):
+        created = lb_context.post("/api/tasks", data={"title": f'lb-task{i}', "priority": "high"})
+        assert created.status == 201
+        list_ids_tasks.append(created.json()["id"])
+
+    list_all_ids = []
+
+    get_all = lb_context.get("/api/tasks").json()
+    for task in get_all:
+        list_all_ids.append(task["id"])
+
+    for id in list_ids_tasks:
+        assert id in list_all_ids, f"Task {id} missing from task list"
+        
+
+
+
+

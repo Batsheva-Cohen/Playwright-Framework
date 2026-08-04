@@ -315,6 +315,12 @@ steteless עובד על מצב JWTכשנשלחת הבקשה זה לא משנה �
  *JWT_SECRETחשוב שכל אינסטינס יחלקו את אותו*
  מכיוון שהזיהוי מתבסס על חישוב מתמטי בעזרת הטוקן והסוד אם כל שרת יחזיק לי בסוד אחר 
  הזיהוי לא יהיה ממסונכרן בן השרתים ועלולים להתרחש ניתוקים או פשוט חוסר זיהוי של משתמשים
+
+ **distributed  הרצת בדיקות ה**
+ uv run pytest -m distributed 
+ collected 34 items / 31 deselected / 3 selected        
+ tests\distributed\test_load_balancer.py sss  [100%]
  
+
 
 
